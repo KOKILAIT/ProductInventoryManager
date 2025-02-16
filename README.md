@@ -12,7 +12,7 @@ Inventory Manager is a Spring Boot application that manages product inventory. I
 ## Installation
 1. Clone the repository:
     ```
-    git clone https://github.com/your-username/inventory-manager.git
+    git clone https://github.com/KOKILAIT/ProductInventoryManager.git
     ```
 2. Navigate to the project directory:
     ```
