@@ -28,6 +28,7 @@ public class ProductService {
             allProducts = productRepository.findAll();
         } catch (Exception e) {
             log.error("Exception occured while retrieving all products" + e.getMessage());
+            throw new RuntimeException("Exception occured while retrieving all products");
         }
         return allProducts;
     }
@@ -63,23 +64,18 @@ public class ProductService {
 
     /**
      * @param product bject to be updated
-     * @param id      of the product to be updated
+     * @param id of the product to be updated
      * @return success message or exception
      */
     @Transactional
-    public String updateProduct(Product product, Long id) {
-        try {
-            Product productFromDB = productRepository.findById(id).orElse(null);
-            if (productFromDB != null) {
-                ProductUtil.copyProductProperties(product, productFromDB);
-                productRepository.save(productFromDB);
-                return "Updated Product successfully";
-            } else {
-                throw new ResourceNotFoundException("Product to be updates is not found");
-            }
-        } catch (Exception e) {
-            log.error("Exception occured in product update" + e.getMessage());
-            throw new RuntimeException("Exception occured in product update" + e.getMessage());
+    public String updateProduct(Product product, Long id) throws Exception {
+        Product productFromDB = productRepository.findById(id).orElse(null);
+        if (productFromDB != null) {
+            ProductUtil.copyProductProperties(product, productFromDB);
+            productRepository.save(productFromDB);
+            return "Updated Product successfully";
+        } else {
+            throw new ResourceNotFoundException("Product to be updates is not found");
         }
     }
 
@@ -88,8 +84,7 @@ public class ProductService {
      * @return success message or exception
      */
     @Transactional
-    public String deleteProduct(Long id) {
-        try {
+    public String deleteProduct(Long id) throws Exception {
             if (productRepository.findById(id).isPresent()) {
                 productRepository.deleteById(id);
                 log.debug("Successfully deleted productID: " + id);
@@ -98,14 +93,6 @@ public class ProductService {
                 log.warn("Trying to delete unavailable product ID: " + id);
                 throw new ResourceNotFoundException("Trying to delete unavailable product ID: " + id);
             }
-
-        } catch (ResourceNotFoundException ex) {
-            log.error("Exception occured on deleting due to unavailable ID");
-            throw new ResourceNotFoundException("Exception occured on deleting due to unavailable ID");
-        } catch (Exception ex) {
-            log.error("Exception occured on deleting");
-            throw new RuntimeException("Exception occured on deleting");
-        }
     }
 
     /**

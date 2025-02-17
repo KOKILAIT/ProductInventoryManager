@@ -100,7 +100,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void updateProduct_passingAvailableProductId_returnThatProduct()
+    void updateProduct_passingAvailableProductId_returnThatProduct() throws Exception
     {
         firstPrduct.setProductID(1045L);
         when(productRepository.findById(firstPrduct.getProductID())).thenReturn(Optional.of(firstPrduct));
@@ -117,8 +117,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void deleteProduct_passingAvailableProductId_thenReturnSuccessMsg()
-    {
+    void deleteProduct_passingAvailableProductId_thenReturnSuccessMsg() throws Exception {
         firstPrduct.setProductID(1045L);
         when(productRepository.findById(firstPrduct.getProductID())).thenReturn(Optional.of(firstPrduct));
         String result = productService.deleteProduct(firstPrduct.getProductID());

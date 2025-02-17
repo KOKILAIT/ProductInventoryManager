@@ -4,8 +4,8 @@
 Inventory Manager is a Spring Boot application that manages product inventory. It provides RESTful APIs to create, read, update, and delete products.
 
 ## Prerequisites
-- Java 17 or higher
-- Maven 3.6.0 or higher
+- Java 17 
+- Maven 3.6.0 
 - Springboot 3.2.2
 - H2 Database
 

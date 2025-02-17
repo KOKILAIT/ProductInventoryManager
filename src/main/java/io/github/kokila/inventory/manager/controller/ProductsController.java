@@ -54,7 +54,7 @@ public class ProductsController {
 
     /**
      *
-     * @param user passing all product details
+     * @param  product details
      * @return either success or failure message with HttpStatus code
      */
     @PostMapping
@@ -73,7 +73,7 @@ public class ProductsController {
 
     /**
      *
-     * @param passing product details to be updated
+     * @param  product details to be updated
      * @param id of the particular product to be updated
      * @return either success or failure message with HttpStatus code
      */

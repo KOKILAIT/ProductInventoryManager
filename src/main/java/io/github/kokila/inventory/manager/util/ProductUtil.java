@@ -14,14 +14,17 @@ import java.util.List;
 public class ProductUtil {
     private static final Logger log = LoggerFactory.getLogger(ProductUtil.class);
 
+    // Private constructor to prevent instantiation
+    private ProductUtil() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     /**
-     *
      * @param productFromRequest product object from update request
-     * @param productFromDB product object from DB
+     * @param productFromDB      product object from DB
      * @throws Exception possibly beansException or generic Exception
      */
-    public static void copyProductProperties(Product productFromRequest,Product productFromDB) throws Exception
-    {
+    public static void copyProductProperties(Product productFromRequest, Product productFromDB) throws Exception {
 
         List<String> nullProperties = new ArrayList<>();
         nullProperties.add("productID");
@@ -43,16 +46,12 @@ public class ProductUtil {
             }
             String[] stringArray = nullProperties.toArray(new String[0]);
             BeanUtils.copyProperties(productFromRequest, productFromDB, stringArray);
-        }
-        catch (BeansException beansException)
-        {
-            log.error("Bean exception occurred while copying properties" +beansException.getMessage());
-            throw new RuntimeException(beansException.getMessage()) ;
-        }
-        catch (Exception e)
-        {
-            log.error("Bean exception occurred while copying properties" +e.getMessage());
-            throw new Exception(e.getMessage()) ;
+        } catch (BeansException beansException) {
+            log.error("Bean exception occurred while copying properties" + beansException.getMessage());
+            throw new RuntimeException(beansException.getMessage());
+        } catch (Exception e) {
+            log.error("Bean exception occurred while copying properties" + e.getMessage());
+            throw new Exception(e.getMessage());
         }
 
     }
