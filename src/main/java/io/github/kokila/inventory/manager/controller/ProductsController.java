@@ -3,9 +3,11 @@ package io.github.kokila.inventory.manager.controller;
 import io.github.kokila.inventory.manager.entity.Product;
 import io.github.kokila.inventory.manager.exception.ResourceNotFoundException;
 import io.github.kokila.inventory.manager.service.ProductService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -58,7 +60,7 @@ public class ProductsController {
      * @return either success or failure message with HttpStatus code
      */
     @PostMapping
-    public Object createProduct(@RequestBody Product product) {
+    public Object createProduct(@Valid @RequestBody  Product product) {
         Product savedProduct = null;
         try {
             savedProduct = productService.createProduct(product);
@@ -78,7 +80,7 @@ public class ProductsController {
      * @return either success or failure message with HttpStatus code
      */
     @PutMapping("/{id}")
-    public String updateProduct(@RequestBody Product product, @PathVariable Long id) {
+    public String updateProduct(@Valid @RequestBody Product product, @PathVariable Long id) {
 
         try {
             log.info("Product updated successfully");

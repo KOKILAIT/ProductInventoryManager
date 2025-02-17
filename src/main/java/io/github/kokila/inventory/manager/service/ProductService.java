@@ -8,6 +8,8 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,10 +24,11 @@ public class ProductService {
     /**
      * @return list of all products available in DB or empty list if nothing is available in DB
      */
+    @Cacheable("ListofAllProducts")
     public List<Product> getProducts() {
         List<Product> allProducts = new ArrayList<>();
         try {
-            allProducts = productRepository.findAll();
+            allProducts = productRepository.findAll(Sort.by("productCategory"));
         } catch (Exception e) {
             log.error("Exception occured while retrieving all products" + e.getMessage());
             throw new RuntimeException("Exception occured while retrieving all products");
