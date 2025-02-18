@@ -4,14 +4,15 @@ import io.github.kokila.inventory.manager.entity.Product;
 import io.github.kokila.inventory.manager.exception.ResourceNotFoundException;
 import io.github.kokila.inventory.manager.service.ProductService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/products")
 public class ProductsController {
@@ -41,6 +42,17 @@ public class ProductsController {
         }
     }
 
+    /**
+     *
+     * @param page the page number to retrieve
+     * @param size the number of products per page
+     * @return page of products
+     */
+    @GetMapping("/pages")
+    public Page<Product> getProducts(@RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "5") int size) {
+        return productService.getProducts(page, size);
+    }
     /**
      * @param id input read from URI parameter
      * @return matching product details if available else throw resource not found exception

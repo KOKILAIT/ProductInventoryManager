@@ -9,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,16 @@ public class ProductService {
             throw new RuntimeException("Exception occured while retrieving all products");
         }
         return allProducts;
+    }
+
+    /**
+     * @param page the page number to retrieve
+     * @param size the number of products per page
+     * @return a page of products
+     */
+    public Page<Product> getProducts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("productName"));
+        return productRepository.findAll(pageable);
     }
 
     /**
@@ -67,7 +80,7 @@ public class ProductService {
 
     /**
      * @param product bject to be updated
-     * @param id of the product to be updated
+     * @param id      of the product to be updated
      * @return success message or exception
      */
     @Transactional
@@ -88,14 +101,14 @@ public class ProductService {
      */
     @Transactional
     public String deleteProduct(Long id) throws Exception {
-            if (productRepository.findById(id).isPresent()) {
-                productRepository.deleteById(id);
-                log.debug("Successfully deleted productID: " + id);
-                return "Deleted successfully";
-            } else {
-                log.warn("Trying to delete unavailable product ID: " + id);
-                throw new ResourceNotFoundException("Trying to delete unavailable product ID: " + id);
-            }
+        if (productRepository.findById(id).isPresent()) {
+            productRepository.deleteById(id);
+            log.debug("Successfully deleted productID: " + id);
+            return "Deleted successfully";
+        } else {
+            log.warn("Trying to delete unavailable product ID: " + id);
+            throw new ResourceNotFoundException("Trying to delete unavailable product ID: " + id);
+        }
     }
 
     /**

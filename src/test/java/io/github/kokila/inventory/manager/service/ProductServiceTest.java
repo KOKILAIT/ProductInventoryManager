@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class ProductServiceTest {
         secondProduct.setProductQuantity(10);
 
         List<Product> list = List.of(firstPrduct,secondProduct);
-        when(productRepository.findAll()).thenReturn(list);
+        when(productRepository.findAll(Sort.by("productCategory"))).thenReturn(list);
         List<Product> products = productService.getProducts();
         assertEquals(list.size(),products.size());
 
@@ -61,7 +62,7 @@ public class ProductServiceTest {
         secondProduct.setProductQuantity(10);
 
         List<Product> list = List.of(firstPrduct,secondProduct);
-        when(productRepository.findAll()).thenReturn(List.of());
+        when(productRepository.findAll(Sort.by("productCategory"))).thenReturn(List.of());
         List<Product> products = productService.getProducts();
         assertEquals(0,products.size());
     }

@@ -85,6 +85,15 @@ public class ProductsControllerTest {
     }
 
     @Test
+    void getProductByName_whenProductsExist_returnProductList() throws Exception{
+        List <Product> products = List.of(product);
+        when(productService.getProductsByName("pen")).thenReturn(products);
+        mockMvc.perform(get("/products/search?productName=pen").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[{'productName':'pen','productDescription':'writer','productPrice':20.0,'productCategory':'stationary','productQuantity':100}]"));
+    }
+
+    @Test
     void createProduct_PassingValidProduct_SuccessfullSave() throws Exception {
         when(productService.createProduct(any(Product.class))).thenReturn(product);
         mockMvc.perform(post("/products")
@@ -93,6 +102,7 @@ public class ProductsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{'productID':1045,'productName':'pen','productDescription':'writer','productPrice':20.0,'productCategory':'stationary','productQuantity':100}"));
     }
+
     @Test
     void createProduct_PassingInValidProduct_throwsException() throws Exception {
         when(productService.createProduct(any(Product.class))).thenThrow(new RuntimeException("Exception occured on creation"));
@@ -101,6 +111,7 @@ public class ProductsControllerTest {
                         .content("{\"productName\":\"pen\",\"productDescription\":\"writer\",\"productPrice\":20.0,\"productCategory\":\"stationary\",\"productQuantity\":100}"))
                 .andExpect(status().isInternalServerError());
     }
+
     @Test
     void updateProduct_withAvailableProductId_returnThatProduct() throws Exception {
         when(productService.updateProduct(any(Product.class), any(Long.class))).thenReturn("Updated Product successfully");
@@ -126,6 +137,7 @@ public class ProductsControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
     @Test
     void  deleteProduct_withUnAvailableProductID_throwsException() throws Exception {
         when(productService.deleteProduct(product.getProductID())).thenThrow(new ResourceNotFoundException("Exception occured on deleting due to unavailable ID"));
