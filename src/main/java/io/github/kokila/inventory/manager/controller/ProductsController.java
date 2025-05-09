@@ -2,9 +2,11 @@ package io.github.kokila.inventory.manager.controller;
 
 import io.github.kokila.inventory.manager.entity.Product;
 import io.github.kokila.inventory.manager.exception.ResourceNotFoundException;
+import io.github.kokila.inventory.manager.repository.ProductRepository;
 import io.github.kokila.inventory.manager.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.ProducerTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class ProductsController {
     private static final Logger log = LoggerFactory.getLogger(ProductsController.class);
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ProducerTemplate producerTemplate;
 
     /**
      * @return list of products from database
@@ -71,18 +76,24 @@ public class ProductsController {
      * @param  product details
      * @return either success or failure message with HttpStatus code
      */
-    @PostMapping
-    public Object createProduct(@Valid @RequestBody  Product product) {
-        Product savedProduct = null;
-        try {
-            savedProduct = productService.createProduct(product);
-            log.info("Successfully created product");
+//    @PostMapping
+//    public Object createProduct(@Valid @RequestBody  Product product) {
+//        Product savedProduct = null;
+//        try {
+//            savedProduct = productService.createProduct(product);
+//            log.info("Successfully created product");
+//
+//        } catch (Exception e) {
+//            log.error("Product creation failed");
+//            throw new RuntimeException(e.getMessage());
+//        }
+//        return savedProduct != null ? savedProduct : "Product creation failed";
+//    }
 
-        } catch (Exception e) {
-            log.error("Product creation failed");
-            throw new RuntimeException(e.getMessage());
-        }
-        return savedProduct != null ? savedProduct : "Product creation failed";
+    @PostMapping
+    public String createProduct(@RequestBody Product product) {
+        producerTemplate.sendBody("activemq:queue:productQueue", product);
+        return "Product creation request has been sent to the queue";
     }
 
     /**

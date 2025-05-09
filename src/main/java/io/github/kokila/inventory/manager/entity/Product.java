@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 @Entity
-public class Product {
+public class Product implements Serializable {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
     private Long productID;
 
     @Size(max = 20,message="Product name must be less than 20 characters")

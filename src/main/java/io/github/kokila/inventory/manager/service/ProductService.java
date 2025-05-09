@@ -14,11 +14,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.apache.camel.ProducerTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service()
 public class ProductService {
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
     @Autowired
@@ -67,17 +68,23 @@ public class ProductService {
      * @param product object to be inserted in DB
      * @return product with ID populated if it is success or exception
      */
+//    @Transactional
+//    public Product createProduct(Product product) {
+//        Product savedProduct = null;
+//        try {
+//            savedProduct = productRepository.save(product);
+//        } catch (Exception e) {
+//            throw new RuntimeException("Exception occurred while creating product" + e.getMessage());
+//        }
+//        return savedProduct;
+//    }
+
     @Transactional
     public Product createProduct(Product product) {
-        Product savedProduct = null;
-        try {
-            savedProduct = productRepository.save(product);
-        } catch (Exception e) {
-            throw new RuntimeException("Exception occurred while creating product" + e.getMessage());
-        }
-        return savedProduct;
-    }
 
+        System.out.println("Creating product: " + product);
+        return productRepository.save(product);
+    }
     /**
      * @param product bject to be updated
      * @param id      of the product to be updated
